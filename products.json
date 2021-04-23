@@ -1,0 +1,78 @@
+[
+    {
+        "name": "ไก่แซบ",
+        "price": "89",
+        "status": "ACTIVE",
+        "imgUrl": null
+    },
+    {
+        "name": "ไก่ทอด Original",
+        "price": "99",
+        "status": "ACTIVE",
+        "imgUrl": null
+
+    },
+    {
+        "name": "ไก่ทอด Spicy",
+        "price": "99",
+        "status": "ACTIVE",
+        "imgUrl": null
+
+    }
+    ,
+    {
+        "name": "ไก่กรอบ Crispy",
+        "price": "120",
+        "status": "ACTIVE",
+        "imgUrl": null
+
+    }
+    ,
+    {
+        "name": "ไก่นุ่ม Mildy",
+        "price": "120",
+        "status": "ACTIVE",
+        "imgUrl": null
+
+    }
+    ,
+    {
+        "name": "ไก่เผ็ดเกาหลี HotChilly",
+        "price": "140",
+        "status": "ACTIVE",
+        "imgUrl": null
+
+    }
+    ,
+    {
+        "name": "ไก่ทอดเกาหลี Original",
+        "price": "140",
+        "status": "ACTIVE",
+        "imgUrl": null
+
+    }
+    ,
+    {
+        "name": "เฟรนช์ฟรายส์",
+        "price": "50",
+        "status": "ACTIVE",
+        "imgUrl": null
+
+    },
+    {
+        "name": "Coke Zero",
+        "price": "20",
+        "status": "ACTIVE",
+        "imgUrl": null
+
+    }
+    ,
+    {
+        "name": "Coke",
+        "price": "20",
+        "status": "ACTIVE",
+        "imgUrl": null
+
+    }
+
+]

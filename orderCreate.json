@@ -1,0 +1,91 @@
+ {
+   
+   "status": "ORDERPLACE",
+   "paymentId": "1",
+   "couponId": "null",
+   "phoneNumberToOrder": "085555555",
+   "houseNumberToOrder": "12",
+   "roadToOrder": "rama2",
+   "districtToOrder": "bangkhuntian",
+   "subDistrictToOrder": "samdam",
+   "provinceToOrder": "bkk",
+   "postalCodeToOrder": "10150",
+   "villageToOrder": "null",
+   "discount" : "null",
+"items": [
+  { "productId": "1",
+    "amount": "2",
+    
+  }
+  ]
+  
+  
+}
+status,
+            customerId,
+            paymentId,
+            couponId,
+            houseNumberToOrder,
+            roadToOrder,
+            districtToOrder,
+            subDistrictToOrder,
+            provinceToOrder,
+            postalCodeToOrder,
+            villageToOrder,
+            items
+
+ phoneNumberToOrder:{
+          type: DataTypes.STRING,
+          allowNull: false,
+             
+          },
+          houseNumberToOrder:
+          {
+              type: DataTypes.STRING,
+              allowNull: false
+          }
+          , 
+          roadToOrder:
+          {
+              type: DataTypes.STRING,
+              allowNull: false
+          }
+          , 
+          villageToOrder:
+          {
+              type: DataTypes.STRING,
+             
+          }
+          , 
+          districtToOrder:
+          {
+              type: DataTypes.STRING,
+              allowNull: false
+          },
+          subDistrictToOrder:
+          {
+              type: DataTypes.STRING,
+              allowNull: false
+          }
+          ,
+          provinceToOrder:
+          {
+              type: DataTypes.STRING,
+              allowNull: false
+          }
+          ,
+          postalCodeToOrder:
+          {
+              type: DataTypes.STRING,
+              allowNull: false
+          },
+          amount: {
+              type: DataTypes.INTEGER,
+          },
+          discount: {
+              type: DataTypes.STRING,
+          },
+          TotalPrice: {
+              type: DataTypes.DECIMAL(10, 2)
+          }
+  
