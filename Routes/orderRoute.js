@@ -17,9 +17,13 @@ router.get("/", orderController.getAllOrders);
 router.post("/", customerController.protect, orderController.createOrder);
 router.put(
   "/statusorder/:id",
-  adminController.protect,
+
   orderController.statusOrder
 );
-router.delete("/deleteorder/:id", orderController.deleteOrder);
+router.delete(
+  "/deleteorder/:id",
+  adminController.protect,
+  orderController.deleteOrder
+);
 
 module.exports = router;

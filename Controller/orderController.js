@@ -77,6 +77,10 @@ exports.getOrder = async (req, res, next) => {
         },
       ],
     });
+    if (!order) return res.status(400).json({ message: "order is require" });
+    if (order.orderTracking === null)
+      return res.status(400).json({ message: "orderTracking is null" });
+
     res.status(200).json({ order });
   } catch (err) {
     next(err);
