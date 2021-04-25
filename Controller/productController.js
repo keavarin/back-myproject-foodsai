@@ -1,3 +1,6 @@
+require("dotenv").config();
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 const { Product, sequelize } = require("../models");
 const { QueryTypes } = require("sequelize");
 const bcrypt = require("bcryptjs");
@@ -32,18 +35,49 @@ exports.bulkCreate = async (req, res, next) => {
   }
 };
 
+// app.post("/", upload.single("image"), async (req, res, next) => {
+//   cloudinary.uploader.upload(req.file.path, async (err, result) => {
+//     //ฝากไปอัพที่ cloudinary
+
+//     const product = await Product.create({
+//       name: req.body.name,
+//       imgUrl: result.secure_url,
+//     });
+//     fs.unlinkSync(req.file.path); //ลบไฟล์รูปที่อยู่มนเครื่ืองเราไม่ให้ลบ
+//     console.log(product);
+//     res.status(200).json({ message: "img-upload", product });
+//   });
+// });
+
 exports.createProduct = async (req, res, next) => {
   try {
     const { name, price, status, imgUrl } = req.body;
-    if (!name || !name.trim())
-      return res.status(400).json({ message: "name is require" });
-    if (!price) return res.status(400).json({ message: "price is require" });
-    if (!(+price > 0))
-      return res
-        .status(400)
-        .json({ message: "price must numeric and greater than 0" });
-    const products = await Product.create({ name, price, status, imgUrl });
-    res.status(200).json({ products });
+
+    // if (!name || !name.trim())
+    //   return res.status(400).json({ message: "name is require" });
+    // if (!price) return res.status(400).json({ message: "price is require" });
+    // if (!(+price > 0))
+    //   return res
+    //     .status(400)
+    //     .json({ message: "price must numeric and greater than 0" });
+
+    cloudinary.uploader.upload(req.file.path, async (err, result) => {
+      console.log(req.file.path);
+      const product = await Product.create({
+        name,
+        imgUrl: result.secure_url,
+        status,
+        price,
+      });
+      console.log(result.secure_url);
+      console.log(imgUrl);
+      console.log(name);
+      console.log(status);
+      console.log(price);
+      fs.unlinkSync(req.file.path);
+      console.log(product);
+      res.status(200).json({ message: "img-upload", product });
+    });
   } catch (err) {
     next(err);
   }
@@ -52,14 +86,26 @@ exports.createProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, price, status, imgUrl } = req.body;
+    const { name, price, status } = req.body;
 
     if (!price) return res.status(400).json({ message: "price is require" });
     if (!(+price > 0))
       return res
         .status(400)
         .json({ message: "price must numeric and greater than 0" });
-    await Product.update({ name, price, status, imgUrl }, { where: { id } });
+
+    cloudinary.uploader.upload(req.file.path, async (err, result) => {
+      await Product.update(
+        {
+          name,
+          price,
+          status,
+          imgUrl: result.secure_url,
+        },
+        { where: { id } }
+      );
+      fs.unlinkSync(req.file.path);
+    });
 
     res.status(200).json({ message: "update success" });
   } catch (err) {

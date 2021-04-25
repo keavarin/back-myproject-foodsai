@@ -72,3 +72,13 @@ exports.login = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.admin = (req, res, next) => {
+  const { id, email } = req.admin;
+  res.status(200).json({
+    admin: {
+      id,
+      email,
+    },
+  });
+};
