@@ -8,6 +8,10 @@ function createCode(num) {
   return num;
 }
 
+function getRandomDiscount() {
+  return +(Math.random() * 0.5).toFixed(2);
+}
+
 exports.createCoupon = async (req, res, next) => {
   try {
     let couponCode = await Coupon.max("code"); //หาค่าmaxในcolummn code
@@ -22,12 +26,8 @@ exports.createCoupon = async (req, res, next) => {
 
     let genCode = "SAI" + createCode(num);
 
-    // if (!code) return res.status(400).json({ message: "Please input code" });
-    // if (!discount)
-    //   return res.status(400).json({ message: "Please input discount" });
-
     const coupon = await Coupon.create({
-      discount: 0.1,
+      discount: getRandomDiscount(),
       code: genCode,
     });
 
@@ -38,14 +38,44 @@ exports.createCoupon = async (req, res, next) => {
   }
 };
 
+// exports.updateProduct = async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+//     const { name, price, status } = req.body;
+
+//     if (!price) return res.status(400).json({ message: "price is require" });
+//     if (!(+price > 0))
+//       return res
+//         .status(400)
+//         .json({ message: "price must numeric and greater than 0" });
+
+//     cloudinary.uploader.upload(req.file.path, async (err, result) => {
+//       await Product.update(
+//         {
+//           name,
+//           price,
+//           status,
+//           imgUrl: result.secure_url,
+//         },
+//         { where: { id } }
+//       );
+//       fs.unlinkSync(req.file.path);
+//     });
+
+//     res.status(200).json({ message: "update success" });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 exports.statusCoupon = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, discount } = req.body;
     if (!status)
       return res.status(400).json({ message: "Please input status" });
 
-    await Coupon.update({ status }, { where: { id } });
+    await Coupon.update({ status, discount }, { where: { code: id } });
     res.status(201).json({ message: "Change Status Success" });
   } catch (err) {
     next(err);

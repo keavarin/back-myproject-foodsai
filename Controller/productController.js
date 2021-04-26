@@ -53,13 +53,13 @@ exports.createProduct = async (req, res, next) => {
   try {
     const { name, price, status, imgUrl } = req.body;
 
-    // if (!name || !name.trim())
-    //   return res.status(400).json({ message: "name is require" });
-    // if (!price) return res.status(400).json({ message: "price is require" });
-    // if (!(+price > 0))
-    //   return res
-    //     .status(400)
-    //     .json({ message: "price must numeric and greater than 0" });
+    if (!name || !name.trim())
+      return res.status(400).json({ message: "name is require" });
+    if (!price) return res.status(400).json({ message: "price is require" });
+    if (!(+price > 0))
+      return res
+        .status(400)
+        .json({ message: "price must numeric and greater than 0" });
 
     cloudinary.uploader.upload(req.file.path, async (err, result) => {
       console.log(req.file.path);
@@ -69,13 +69,9 @@ exports.createProduct = async (req, res, next) => {
         status,
         price,
       });
-      console.log(result.secure_url);
-      console.log(imgUrl);
-      console.log(name);
-      console.log(status);
-      console.log(price);
+
       fs.unlinkSync(req.file.path);
-      console.log(product);
+
       res.status(200).json({ message: "img-upload", product });
     });
   } catch (err) {
