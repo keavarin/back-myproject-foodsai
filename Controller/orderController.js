@@ -87,7 +87,7 @@ exports.getOrder = async (req, res, next) => {
     if (order.orderTracking === "")
       return res.status(400).json({ message: "orderTracking is null" });
 
-    res.status(200).json({ order });
+    res.status(200).json({ order, coupon });
   } catch (err) {
     next(err);
   }
@@ -204,8 +204,18 @@ exports.createOrder = async (req, res, next) => {
         },
       }
     );
+
+    await Coupon.update(
+      { status: "FALSE" },
+      {
+        where: {
+          id: coupon.id,
+        },
+      }
+    );
+
     console.log(orders.discount);
-    res.status(201).json({ orders, orderItems });
+    res.status(201).json({ orders, orderItems, coupon });
   } catch (err) {
     //console.log(err);
     await transaction.rollback();

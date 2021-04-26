@@ -1,12 +1,14 @@
 const { Payment, Order } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Coupon = require("../models/Coupon");
 
 exports.createPayment = async (req, res, next) => {
   try {
     const { paymentType, orderId } = req.body;
 
     const order = await Order.findByPk(orderId);
+
     // console.log(order.id);
 
     const payment = await Payment.create({
