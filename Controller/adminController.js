@@ -63,7 +63,7 @@ exports.login = async (req, res, next) => {
         .status(400)
         .json({ message: "admin or password is not correct" });
 
-    const payload = { id: admin.id, email: admin.email };
+    const payload = { id: admin.id, email: admin.email, role: "admin" };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: +process.env.JWT_EXPIRES_IN,
     });

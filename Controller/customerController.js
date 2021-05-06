@@ -52,7 +52,13 @@ exports.register = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    const payload = { id: customer.id, email, firstName, lastName };
+    const payload = {
+      id: customer.id,
+      email,
+      firstName,
+      lastName,
+      role: "customer",
+    };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: +process.env.JWT_EXPIRES_IN,
     });
@@ -83,6 +89,7 @@ exports.login = async (req, res, next) => {
       email: customer.email,
       firstName: customer.firstName,
       lastName: customer.lastName,
+      role: "customer",
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: +process.env.JWT_EXPIRES_IN,

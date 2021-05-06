@@ -9,7 +9,7 @@ function createCode(num) {
 }
 
 function getRandomDiscount() {
-  return +(Math.random() * 0.5).toFixed(2);
+  return +(Math.random() * 0.2).toFixed(2);
 }
 
 exports.createCoupon = async (req, res, next) => {
