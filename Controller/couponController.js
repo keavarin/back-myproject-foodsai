@@ -1,4 +1,7 @@
 const { Coupon } = require("../models");
+require("dotenv").config();
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -6,10 +9,6 @@ function createCode(num) {
   num = `${+num + 1}`;
   num = num.padStart(5, "0");
   return num;
-}
-
-function getRandomDiscount() {
-  return +(Math.random() * 0.2).toFixed(2);
 }
 
 exports.createCoupon = async (req, res, next) => {
@@ -27,7 +26,7 @@ exports.createCoupon = async (req, res, next) => {
     let genCode = "SAI" + createCode(num);
 
     const coupon = await Coupon.create({
-      discount: getRandomDiscount(),
+      discount: 0.1,
       code: genCode,
     });
 
@@ -82,11 +81,6 @@ exports.statusCoupon = async (req, res, next) => {
   }
 };
 
-// function getCode() {
-//             let code = Math.floor(Math.random() * (10 - 1) + 1);
-//             return code;
-//         }
-// console.log(getCode())
 exports.getCoupon = async (req, res, next) => {
   try {
     //const hashedPassword = await bcrypt.hash(password, +process.env.BCRYPT_SALT)
@@ -97,6 +91,29 @@ exports.getCoupon = async (req, res, next) => {
     // const payload = {id: admin.id, email}
     // const token = jwt.sign(payload,process.env.JWT_SECRET, {expiresIn: +process.env.JWT_EXPIRES_IN} )
     // res.status(201).json({token})
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateCoupon = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { status, discount } = req.body;
+
+    cloudinary.uploader.upload(req.file.path, async (err, result) => {
+      await Product.update(
+        {
+          status,
+          discount,
+          imgUrl: result.secure_url,
+        },
+        { where: { id } }
+      );
+      fs.unlinkSync(req.file.path);
+    });
+
+    res.status(200).json({ message: "update success" });
   } catch (err) {
     next(err);
   }

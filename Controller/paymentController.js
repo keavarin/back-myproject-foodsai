@@ -9,12 +9,12 @@ exports.createPayment = async (req, res, next) => {
 
     const order = await Order.findByPk(orderId);
 
-    // console.log(order.id);
+    console.log(order.id);
 
     const payment = await Payment.create({
       paymentType: paymentType,
     });
-    // console.log(payment.id);
+    console.log(payment.id);
     await Order.update(
       {
         paymentId: payment.id ? payment.id : null,

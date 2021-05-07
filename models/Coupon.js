@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         name: "couponId",
       },
       onDelete: "RESTRICT",
-      onUpdate: "RESTRICT",
     });
   };
   return Coupon;

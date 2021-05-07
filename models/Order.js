@@ -97,7 +97,6 @@ module.exports = (sequelize, DataTypes) => {
           name: "couponId",
         },
         onDelete: "RESTRICT",
-        onUpdate: "RESTRICT",
       }),
       Order.hasMany(models.OrderItem, {
         foreignKey: {

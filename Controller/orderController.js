@@ -6,9 +6,6 @@ const {
   sequelize,
   Coupon,
 } = require("../models");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const e = require("express");
 
 function createOrderTracking(num) {
   num = `${+num + 1}`;
@@ -87,7 +84,7 @@ exports.getOrder = async (req, res, next) => {
     if (order.orderTracking === "")
       return res.status(400).json({ message: "orderTracking is null" });
 
-    res.status(200).json({ order, coupon });
+    res.status(200).json({ order /* coupon*/ });
   } catch (err) {
     next(err);
   }
@@ -122,21 +119,22 @@ exports.createOrder = async (req, res, next) => {
 
     let orderTracking = createOrderTracking(num);
 
-    let x;
+    let discountRate;
     let coupon;
 
     if (!couponId) {
-      x = 0;
+      discountRate = 0;
     } else {
       coupon = await Coupon.findByPk(couponId);
+      console.log("coupon", coupon);
       console.log(coupon.discount);
       if (coupon.discount != 0) {
-        x = coupon.discount;
+        discountRate = coupon.discount;
       } else if (coupon.discount === null) {
-        x = 0;
+        discountRate = 0;
       }
     }
-    // console.log(`x${x}`);
+    console.log(`discountRate${discountRate}`);
     // if (coupon === null)
     //console.log(coupon);
     const orders = await Order.create(
@@ -146,8 +144,7 @@ exports.createOrder = async (req, res, next) => {
         customerId: req.customer.id,
         paymentId,
         couponId,
-        // discount,
-        discount: x,
+        discount: discountRate,
         houseNumberToOrder,
         phoneNumberToOrder,
         roadToOrder,
@@ -161,8 +158,8 @@ exports.createOrder = async (req, res, next) => {
       },
       { transaction }
     );
-
-    //console.log(orders.id)
+    console.log(couponId);
+    console.log(orders.id);
     //console.log(req.customer.id)
     console.log(`orders.discount ${orders.discount}`);
     // console.log(coupon.discount);
@@ -181,8 +178,12 @@ exports.createOrder = async (req, res, next) => {
         },
         { transaction }
       );
+      console.log("order-id", orders.id);
+      console.log("sai", orderItem.orderId);
 
       orderItems.push(orderItem);
+      console.log("item-price", orderItem.price);
+      console.log(couponId);
 
       if (couponId) {
         if (orders.discount === null || orders.discount === undefined) {
@@ -194,6 +195,9 @@ exports.createOrder = async (req, res, next) => {
       }
     }
 
+    // console.log("couponid", coupon.id, "hello");
+    // console.log("order-id", orders.id, "hello");
+
     await transaction.commit();
 
     await Order.update(
@@ -204,21 +208,27 @@ exports.createOrder = async (req, res, next) => {
         },
       }
     );
+    // console.log(couponId);
+    // await Coupon.update(
+    //   { status: "FALSE" },
+    //   {
+    //     where: {
+    //       id: coupon.id,
+    //     },
+    //   }
+    // );
 
-    await Coupon.update(
-      { status: "FALSE" },
-      {
-        where: {
-          id: coupon.id,
-        },
-      }
-    );
+    // console.log("after totalPrice of order");
+    // console.log("before totalPrice of coupon");
+    // console.log("before update status couponId", couponId);
 
-    console.log(orders.discount);
+    // console.log("after status of coupon");
+    // console.log(orders.discount);
     res.status(201).json({ orders, orderItems, coupon });
   } catch (err) {
-    //console.log(err);
+    console.log(err);
     await transaction.rollback();
+    console.error(err.message);
     next(err);
   }
 };
