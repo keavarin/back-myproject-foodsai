@@ -60,10 +60,6 @@ module.exports = (sequelize, DataTypes) => {
       TotalPrice: {
         type: DataTypes.DECIMAL(10, 2),
       },
-      orderTracking: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
     },
     {
       underscored: true,

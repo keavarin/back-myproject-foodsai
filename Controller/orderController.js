@@ -59,7 +59,7 @@ exports.getOrder = async (req, res, next) => {
   try {
     const { id } = req.params;
     const order = await Order.findOne({
-      where: { orderTracking: id },
+      where: { id },
 
       include: [
         {
@@ -79,10 +79,9 @@ exports.getOrder = async (req, res, next) => {
       return res.status(400).json({ message: "ไม่มีเลขที่ orderนี้" });
     if (order === null)
       return res.status(400).json({ message: "ไม่มีเลขที่ orderนี้" });
-    if (order.orderTracking === undefined)
-      return res.status(400).json({ message: "orderTracking is null" });
-    if (order.orderTracking === "")
-      return res.status(400).json({ message: "orderTracking is null" });
+    if (order.id === undefined)
+      return res.status(400).json({ message: "id is null" });
+    if (order.id === "") return res.status(400).json({ message: "id is null" });
 
     res.status(200).json({ order /* coupon*/ });
   } catch (err) {
@@ -108,16 +107,16 @@ exports.createOrder = async (req, res, next) => {
       items,
     } = req.body;
 
-    let orderTrack = await Order.max("orderTracking");
+    // let orderTrack = await Order.max("orderTracking");
 
-    let num;
-    if (!orderTrack) {
-      num = "";
-    } else {
-      num = orderTrack;
-    }
+    // let num;
+    // if (!orderTrack) {
+    //   num = "";
+    // } else {
+    //   num = orderTrack;
+    // }
 
-    let orderTracking = createOrderTracking(num);
+    // let orderTracking = createOrderTracking(num);
 
     let discountRate;
     let coupon;
@@ -153,22 +152,19 @@ exports.createOrder = async (req, res, next) => {
         provinceToOrder,
         postalCodeToOrder,
         villageToOrder,
-        orderTracking,
-        //totalPrice: product.price*orderItems.amount
       },
       { transaction }
     );
     console.log(couponId);
     console.log(orders.id);
-    //console.log(req.customer.id)
+
     console.log(`orders.discount ${orders.discount}`);
-    // console.log(coupon.discount);
 
     const orderItems = [];
     let sumPrice = 0;
     for (let item of items) {
       const product = await Product.findByPk(item.productId);
-      //   console.log(item.id);
+
       const orderItem = await OrderItem.create(
         {
           productId: item.productId,
@@ -195,9 +191,6 @@ exports.createOrder = async (req, res, next) => {
       }
     }
 
-    // console.log("couponid", coupon.id, "hello");
-    // console.log("order-id", orders.id, "hello");
-
     await transaction.commit();
 
     await Order.update(
@@ -208,22 +201,7 @@ exports.createOrder = async (req, res, next) => {
         },
       }
     );
-    // console.log(couponId);
-    // await Coupon.update(
-    //   { status: "FALSE" },
-    //   {
-    //     where: {
-    //       id: coupon.id,
-    //     },
-    //   }
-    // );
 
-    // console.log("after totalPrice of order");
-    // console.log("before totalPrice of coupon");
-    // console.log("before update status couponId", couponId);
-
-    // console.log("after status of coupon");
-    // console.log(orders.discount);
     res.status(201).json({ orders, orderItems, coupon });
   } catch (err) {
     console.log(err);
@@ -237,9 +215,7 @@ exports.deleteOrder = async (req, res, next) => {
   const transaction = await sequelize.transaction();
   try {
     const { id } = req.params;
-
-    // await OrderItem.destroy({ where: { orderId:  } }, { transaction });
-    await Order.destroy({ where: { orderTracking: id } }, { transaction });
+    await Order.destroy({ where: { id } }, { transaction });
 
     await transaction.commit();
     res.status(201).json({ message: "delete success" });
@@ -255,25 +231,9 @@ exports.statusOrder = async (req, res, next) => {
     if (!status)
       return res.status(400).json({ message: "Please input status" });
 
-    await Order.update({ status }, { where: { orderTracking: id } });
+    await Order.update({ status }, { where: { id } });
     res.status(201).json({ message: "Change Status Success" });
   } catch (err) {
-    next(err);
-  }
-};
-
-exports.test = async (req, res, next) => {
-  try {
-    await Order.update(
-      { TotalPrice: 999 },
-      {
-        where: {
-          provinceToOrder: "bkk",
-        },
-      }
-    );
-  } catch (err) {
-    console.log(err);
     next(err);
   }
 };

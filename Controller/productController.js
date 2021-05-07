@@ -82,28 +82,24 @@ exports.createProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, price, status } = req.body;
-
-    if (!price) return res.status(400).json({ message: "price is require" });
-    if (!(+price > 0))
-      return res
-        .status(400)
-        .json({ message: "price must numeric and greater than 0" });
+    const { price, status, imgUrl } = req.body;
 
     cloudinary.uploader.upload(req.file.path, async (err, result) => {
+      console.log(req.file.path);
       await Product.update(
         {
-          name,
-          price,
           status,
+          price,
           imgUrl: result.secure_url,
         },
         { where: { id } }
       );
-      fs.unlinkSync(req.file.path);
-    });
 
-    res.status(200).json({ message: "update success" });
+      fs.unlinkSync(req.file.path);
+
+      // await Product.update({ status, price }, { where: { id } });
+      res.status(201).json({ message: "Update Product Success" });
+    });
   } catch (err) {
     next(err);
   }
