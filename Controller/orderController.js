@@ -16,15 +16,15 @@ function createOrderTracking(num) {
 exports.getAllOrders = async (req, res, next) => {
   try {
     const orders = await Order.findAll({
-      include: [
-        {
-          model: OrderItem,
-          include: {
-            model: Product,
-            attributes: ["id", "name"],
-          },
-        },
+      attributes: [
+        "id",
+        "status",
+        "phoneNumberToOrder",
+        "customerId",
+        "paymentId",
       ],
+      order: [["id", "DESC"]],
+      // limit: 100,
     });
     res.status(200).json({ orders });
   } catch (err) {
@@ -106,17 +106,6 @@ exports.createOrder = async (req, res, next) => {
       villageToOrder,
       items,
     } = req.body;
-
-    // let orderTrack = await Order.max("orderTracking");
-
-    // let num;
-    // if (!orderTrack) {
-    //   num = "";
-    // } else {
-    //   num = orderTrack;
-    // }
-
-    // let orderTracking = createOrderTracking(num);
 
     let discountRate;
     let coupon;

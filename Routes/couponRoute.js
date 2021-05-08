@@ -8,5 +8,5 @@ const router = express.Router();
 
 router.get("/", customerController.protect, couponController.getCoupon);
 router.put("/statuscoupon/:id", couponController.statusCoupon);
-router.get("/createcoupon", couponController.createCoupon);
+router.post("/createcoupon", couponController.createCoupon);
 module.exports = router;

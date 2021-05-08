@@ -2,9 +2,6 @@ require("dotenv").config();
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
 const { Product, sequelize } = require("../models");
-const { QueryTypes } = require("sequelize");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
 exports.getAllProduct = async (req, res, next) => {
   try {
@@ -79,27 +76,30 @@ exports.createProduct = async (req, res, next) => {
   }
 };
 
-exports.updateProduct = async (req, res, next) => {
+exports.updateProductImg = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { price, status, imgUrl } = req.body;
+    const { imgUrl } = req.body;
 
     cloudinary.uploader.upload(req.file.path, async (err, result) => {
-      console.log(req.file.path);
-      await Product.update(
-        {
-          status,
-          price,
-          imgUrl: result.secure_url,
-        },
-        { where: { id } }
-      );
+      await Product.update({ imgUrl: result.secure_url }, { where: { id } });
 
       fs.unlinkSync(req.file.path);
 
-      // await Product.update({ status, price }, { where: { id } });
-      res.status(201).json({ message: "Update Product Success" });
+      res.status(201).json({ message: "Update Picture Success" });
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { status, price } = req.body;
+
+    await Product.update({ status, price }, { where: { id } });
+    res.status(201).json({ message: "Update Product Success" });
   } catch (err) {
     next(err);
   }

@@ -12,6 +12,11 @@ router.put(
   adminController.protect,
   productController.updateProduct
 );
+router.put(
+  "/updateproductimg/:id",
+  adminController.protect,
+  productController.updateProductImg
+);
 router.post(
   "/createproduct",
   adminController.protect,
