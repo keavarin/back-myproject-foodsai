@@ -7,18 +7,11 @@ const {
   Coupon,
 } = require("../models");
 
-// function createOrderTracking(num) {
-//   num = `${+num + 1}`;
-//   num = num.padStart(3, "0");
-//   return num;
-// }
-
 exports.getAllOrders = async (req, res, next) => {
   try {
     const orders = await Order.findAll({
       attributes: ["id", "status", "phoneNumberToOrder", "customerId", "date"],
       order: [["id", "DESC"]],
-      // limit: 100,
     });
     res.status(200).json({ orders });
   } catch (err) {
@@ -100,6 +93,23 @@ exports.createOrder = async (req, res, next) => {
       villageToOrder,
       items,
     } = req.body;
+
+    if (!phoneNumberToOrder)
+      return res
+        .status(400)
+        .json({ message: "please input your phone number" });
+    if (!houseNumberToOrder)
+      return res
+        .status(400)
+        .json({ message: "please input your house number" });
+    if (!districtToOrder)
+      return res.status(400).json({ message: "please input your district" });
+    if (!subDistrictToOrder)
+      return res
+        .status(400)
+        .json({ message: "please input your sub-district" });
+    if (!provinceToOrder)
+      return res.status(400).json({ message: "please input your province" });
 
     let discountRate;
     let coupon;

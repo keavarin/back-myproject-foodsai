@@ -37,7 +37,7 @@ exports.register = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    const payload = { id: admin.id, email };
+    const payload = { id: admin.id, email, role: "admin" };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: +process.env.JWT_EXPIRES_IN,
     });
@@ -67,7 +67,7 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: +process.env.JWT_EXPIRES_IN,
     });
-    res.status(201).json({ token, role: "admin" });
+    res.status(201).json({ token });
   } catch (err) {
     next(err);
   }

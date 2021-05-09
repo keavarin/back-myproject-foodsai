@@ -94,7 +94,7 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: +process.env.JWT_EXPIRES_IN,
     });
-    res.status(201).json({ token, role: "customer" });
+    res.status(201).json({ token });
   } catch (err) {
     next(err);
   }
