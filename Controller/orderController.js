@@ -7,22 +7,16 @@ const {
   Coupon,
 } = require("../models");
 
-function createOrderTracking(num) {
-  num = `${+num + 1}`;
-  num = num.padStart(3, "0");
-  return num;
-}
+// function createOrderTracking(num) {
+//   num = `${+num + 1}`;
+//   num = num.padStart(3, "0");
+//   return num;
+// }
 
 exports.getAllOrders = async (req, res, next) => {
   try {
     const orders = await Order.findAll({
-      attributes: [
-        "id",
-        "status",
-        "phoneNumberToOrder",
-        "customerId",
-        "paymentId",
-      ],
+      attributes: ["id", "status", "phoneNumberToOrder", "customerId", "date"],
       order: [["id", "DESC"]],
       // limit: 100,
     });

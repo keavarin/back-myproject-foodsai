@@ -6,12 +6,12 @@ let voucher_codes = require("voucher-code-generator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-function createCode(num) {
-  num = `${+num + 1}`;
-  num = num.padStart(5, "0");
-  return num;
-}
-// let myCode = voucher_codes.generate({
+// function createCode(num) {
+//   num = `${+num + 1}`;
+//   num = num.padStart(5, "0");
+//   return num;
+// }
+// // let myCode = voucher_codes.generate({
 //   prefix: "SAI",
 //   charset: "0123456789",
 // });
@@ -60,44 +60,10 @@ exports.createCoupon = async (req, res, next) => {
   }
 };
 
-// exports.updateProduct = async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     const { name, price, status } = req.body;
-
-//     if (!price) return res.status(400).json({ message: "price is require" });
-//     if (!(+price > 0))
-//       return res
-//         .status(400)
-//         .json({ message: "price must numeric and greater than 0" });
-
-//     cloudinary.uploader.upload(req.file.path, async (err, result) => {
-//       await Product.update(
-//         {
-//           name,
-//           price,
-//           status,
-//           imgUrl: result.secure_url,
-//         },
-//         { where: { id } }
-//       );
-//       fs.unlinkSync(req.file.path);
-//     });
-
-//     res.status(200).json({ message: "update success" });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
 exports.statusCoupon = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { status, discount } = req.body;
-    // if (!code)
-    //   return res.status(400).json({ message: "Please input discount" });
-    // if (!discount)
-    //   return res.status(400).json({ message: "Please input discount" });
 
     await Coupon.update({ status: "FALSE" }, { where: { id } });
     res.status(201).json({ message: "Update  Success" });
